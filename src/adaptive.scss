@@ -1,0 +1,6 @@
+@function calc-between-width($w1, $v1, $w2, $v2) {
+    @return calc(
+      #{$v1 * 1px} + (#{$v2 - $v1} * (100vw - #{$w1 * 1px}) / #{$w2 - $w1})
+    );
+  }
+  

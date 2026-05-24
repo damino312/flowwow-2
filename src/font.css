@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./assets/fonts/Montserrat-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Montserrat-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+@font-face {
+    font-family: 'CoFo';
+    src: url('./assets/fonts/CoFoSans-Bold.woff2') format('woff2'),
+    url('./assets/fonts/CoFoSans-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* Actay Regular */
+  @font-face {
+    font-family: 'Actay';
+    src: url('./assets/fonts/Actay-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* Actay Bold */
+  @font-face {
+    font-family: 'Actay';
+    src: url('./assets/fonts/ActayWide-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
