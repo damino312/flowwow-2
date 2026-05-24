@@ -1,19 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from './Button';
-import { validateDate } from '../utils/validators';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import { validateDate } from "../utils/validators";
 
 const Form = () => {
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [error, setError] = useState('');
-
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   // При монтировании проверяем sessionStorage
   useEffect(() => {
-    const savedName = sessionStorage.getItem('formName');
+    const savedName = sessionStorage.getItem("formName");
     if (savedName) {
       setName(savedName);
     }
@@ -23,7 +22,7 @@ const Form = () => {
     const value = e.target.value;
     setName(value);
     // Сохраняем в sessionStorage
-    sessionStorage.setItem('formName', value);
+    sessionStorage.setItem("formName", value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,19 +30,16 @@ const Form = () => {
     navigate(`/loading`);
   };
 
-
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setDate(value);
-    sessionStorage.setItem('formDate', value);
+    sessionStorage.setItem("formDate", value);
   };
 
   const handleBlur = () => {
     const validation = validateDate(date);
-    setError(validation.error || '');
+    setError(validation.error || "");
   };
-
-
 
   return (
     <form className="form" onSubmit={handleSubmit}>
@@ -69,12 +65,18 @@ const Form = () => {
           onChange={handleDateChange}
           onBlur={handleBlur}
           className="form-input"
-          placeholder='Дата его рождения (дд.мм.гг)'
+          placeholder="Дата его рождения (дд.мм.гг)"
           maxLength={10}
         />
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div style={{ color: "red" }}>{error}</div>}
       </div>
-      <Button type="submit" color='secondary' disabled={error.length > 0 || !date}>Ну, и когда?</Button>
+      <Button
+        type="submit"
+        color="secondary"
+        disabled={error.length > 0 || !date}
+      >
+        И когда же?
+      </Button>
     </form>
   );
 };
