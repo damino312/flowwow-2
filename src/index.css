@@ -102,6 +102,23 @@ main {
   }
 }
 
+.header-logo {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  line-height: 0;
+
+  img {
+    display: block;
+    height: auto;
+  }
+}
+
 .container {
   margin: 3rem;
   padding: 0rem 3rem;

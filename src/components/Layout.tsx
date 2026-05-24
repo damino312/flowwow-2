@@ -1,17 +1,25 @@
 import React, { type FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type TLayoutProps = {
     children: React.ReactNode;
     className?: string;
 }
 
-const Layout: FC<TLayoutProps> = ({ children,className }) => {
+const Layout: FC<TLayoutProps> = ({ children, className }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={'layout'}>
       <header className={'header'}>
-        <div>
+        <button
+          type="button"
+          className="header-logo"
+          onClick={() => navigate('/')}
+          aria-label="На главную"
+        >
           <img src='../src/assets/logo.svg' alt='FLOWWOW'/>
-        </div>
+        </button>
         <h1 className={'visually-hidden'}>FLOWWOW: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
       </header>
       
