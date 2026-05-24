@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
-import { validateDate } from "../utils/validators";
+import { formatDateInput, validateDate } from "../utils/validators";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -27,13 +27,55 @@ const Form = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const validation = validateDate(date);
+    if (!validation.isValid) {
+      setError(validation.error || "");
+      return;
+    }
     navigate(`/loading`);
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDate(value);
-    sessionStorage.setItem("formDate", value);
+    const formatted = formatDateInput(e.target.value);
+    setDate(formatted);
+    sessionStorage.setItem("formDate", formatted);
+
+    if (formatted.length === 10) {
+      const validation = validateDate(formatted);
+      setError(validation.error || "");
+    } else {
+      setError("");
+    }
+  };
+
+  const handleDatePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text");
+    const formatted = formatDateInput(pasted);
+    setDate(formatted);
+    sessionStorage.setItem("formDate", formatted);
+
+    if (formatted.length === 10) {
+      const validation = validateDate(formatted);
+      setError(validation.error || "");
+    } else {
+      setError("");
+    }
+  };
+
+  const handleDateKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedKeys = [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "Tab",
+      "Home",
+      "End",
+    ];
+
+    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
+    if (!/^\d$/.test(e.key)) e.preventDefault();
   };
 
   const handleBlur = () => {
@@ -60,20 +102,24 @@ const Form = () => {
       <div className="form-group">
         <input
           type="text"
+          inputMode="numeric"
           id="date"
           value={date}
           onChange={handleDateChange}
+          onPaste={handleDatePaste}
+          onKeyDown={handleDateKeyDown}
           onBlur={handleBlur}
           className="form-input"
-          placeholder="Дата его рождения (дд.мм.гг)"
+          placeholder="Дата его рождения (дд.мм.гггг)"
           maxLength={10}
+          autoComplete="off"
         />
         {error && <div style={{ color: "red" }}>{error}</div>}
       </div>
       <Button
         type="submit"
         color="secondary"
-        disabled={error.length > 0 || !date}
+        disabled={error.length > 0 || date.length !== 10}
       >
         И когда же?
       </Button>
