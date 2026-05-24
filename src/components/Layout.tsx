@@ -1,16 +1,16 @@
-import { type FC } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
+import { type FC } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const MAIN_CLASS_BY_PATH: Record<string, string> = {
-  '/': 'home-bg',
-  '/result': 'result-layout',
+  "/": "home-bg",
+  "/result": "result-layout",
 };
 
 const Layout: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const mainClass = MAIN_CLASS_BY_PATH[location.pathname] ?? '';
+  const mainClass = MAIN_CLASS_BY_PATH[location.pathname] ?? "";
 
   return (
     <div className="layout">
@@ -18,7 +18,7 @@ const Layout: FC = () => {
         <button
           type="button"
           className="header-logo"
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           aria-label="На главную"
         >
           <img src="../src/assets/logo.svg" alt="FLOWWOW" />
@@ -26,7 +26,7 @@ const Layout: FC = () => {
         <h1 className="visually-hidden">FLOWWOW: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
       </header>
 
-      {/* <motion.main
+      <motion.main
         key={location.pathname}
         className={mainClass}
         initial={{ opacity: 0 }}
@@ -35,10 +35,7 @@ const Layout: FC = () => {
         transition={{ duration: 0.5 }}
       >
         <Outlet />
-      </motion.main> */}
-      <main className={mainClass}>
-        <Outlet />
-      </main>
+      </motion.main>
     </div>
   );
 };
