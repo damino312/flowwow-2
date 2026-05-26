@@ -6,6 +6,8 @@ function getCapturePaddingX() {
 
 function resolveCaptureElement(): HTMLElement {
   const root = document.querySelector(CAPTURE_SELECTOR);
+
+  console.log(root);
   if (root instanceof HTMLElement) return root;
 
   throw new Error("Не удалось найти страницу для экспорта");
