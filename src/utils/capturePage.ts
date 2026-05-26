@@ -1,15 +1,11 @@
-const CAPTURE_ROOT_SELECTOR = "main.result-layout";
-const FALLBACK_SELECTOR = "#root";
+const CAPTURE_SELECTOR = "#root";
 
 function getCapturePaddingX() {
   return window.matchMedia("(max-width: 640px)").matches ? "1.2rem" : "3rem";
 }
 
 function resolveCaptureElement(): HTMLElement {
-  const resultMain = document.querySelector(CAPTURE_ROOT_SELECTOR);
-  if (resultMain instanceof HTMLElement) return resultMain;
-
-  const root = document.querySelector(FALLBACK_SELECTOR);
+  const root = document.querySelector(CAPTURE_SELECTOR);
   if (root instanceof HTMLElement) return root;
 
   throw new Error("Не удалось найти страницу для экспорта");
@@ -33,6 +29,7 @@ export async function capturePageAsPng(): Promise<string> {
       boxSizing: "border-box",
       paddingLeft: getCapturePaddingX(),
       paddingRight: getCapturePaddingX(),
+      backgroundColor: "#ffffff",
     },
   });
 }
