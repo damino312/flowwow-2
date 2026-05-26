@@ -1,5 +1,6 @@
 .promo {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   border-radius: 40px;
   background-image: url("../../assets/bg_2.png");
@@ -10,9 +11,10 @@
   @media (max-width: 950px) {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     gap: 1.6rem;
+    padding: 16px 28px;
   }
 
   .gift {
@@ -20,7 +22,8 @@
   }
 
   .code {
-    margin: 27rem 8rem;
+    flex-shrink: 0;
+    margin: 0 4rem;
     padding: 1.7rem 4.3rem;
     width: 42rem;
     border-radius: 22px;
@@ -30,11 +33,11 @@
     backdrop-filter: blur(59.400001525878906px);
 
     @media (max-width: 950px) {
-      margin: 1.6rem;
+      margin: auto;
       margin-bottom: 0;
       padding: 1.4rem 3.4rem;
       min-width: 26.5rem;
-      width: auto;
+      width: 100%;
     }
   }
 
@@ -43,11 +46,16 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 6rem 7.7rem;
+    height: stretch;
 
     @media (max-width: 950px) {
       margin-top: 0;
-      padding: 3rem 1.6rem;
+      padding: 2rem 1.6rem;
       min-width: 30rem;
+      height: auto;
+      margin: 0;
+      flex: 1 1 0;
+      width: 100%;
     }
   }
 
