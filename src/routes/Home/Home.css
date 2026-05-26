@@ -33,6 +33,13 @@
     text-transform: uppercase;
     color: #370b27;
     margin: 0;
+    max-width: 14em;
+    margin-inline: auto;
+    text-wrap: balance;
+
+    @media (min-aspect-ratio: 21/9) and (min-width: 1200px) {
+      font-size: 3.6rem;
+    }
 
     @media (max-width: 1023px) {
       font-size: 4rem;
@@ -40,16 +47,27 @@
 
     @media (max-width: 640px) {
       font-size: 3rem;
+      max-width: 12em;
       margin-bottom: 1.6rem;
+    }
+
+    @media (max-height: 800px) and (min-width: 641px) {
+      font-size: 3rem;
     }
   }
 
   .home-text {
     margin: 0;
+    font-size: 1.8rem;
+    line-height: 130%;
     padding-top: 1.6rem;
     padding-bottom: 4rem;
     padding-right: 8.9rem;
     padding-left: 8.9rem;
+
+    @media (min-aspect-ratio: 21/9) and (min-width: 1200px) {
+      font-size: 1.65rem;
+    }
 
     @media (max-width: 640px) {
       font-size: 1.6rem;
@@ -83,6 +101,7 @@
   button {
     width: 50%;
     margin: 0 auto;
+    font-size: 1.8rem;
   }
 
   @media (max-width: 640px) {
