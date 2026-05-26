@@ -29,7 +29,7 @@ export async function capturePageAsPng(): Promise<string> {
       boxSizing: "border-box",
       paddingLeft: getCapturePaddingX(),
       paddingRight: getCapturePaddingX(),
-      backgroundColor: "#ffffff",
+      // backgroundColor: "#ffffff",
     },
   });
 }
