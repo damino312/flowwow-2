@@ -92,9 +92,10 @@
       display: block;
       flex-direction: initial;
       justify-content: initial;
-      width: auto;
+      align-self: stretch;
+      width: 100%;
+      margin: 0;
       padding: 1.6rem;
-      margin-bottom: 0;
     }
   }
 
