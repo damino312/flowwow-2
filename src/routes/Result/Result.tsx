@@ -14,13 +14,13 @@ const Result = () => {
   const handleDownload = async () => {
     try {
       const blob = await capturePageAsBlob();
-      downloadBlob(blob, IMAGE_FILENAME);
+      await downloadBlob(blob, IMAGE_FILENAME);
     } catch {
       const name = sessionStorage.getItem("formName") || "";
       const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
-      downloadBlob(blob, "pionovyj-predskazatel.txt");
+      await downloadBlob(blob, "pionovyj-predskazatel.txt");
     }
   };
 
@@ -35,7 +35,7 @@ const Result = () => {
         return;
       }
 
-      downloadBlob(blob, IMAGE_FILENAME);
+      await downloadBlob(blob, IMAGE_FILENAME);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");

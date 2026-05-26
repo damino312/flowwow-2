@@ -107,10 +107,121 @@ export async function capturePageAsBlob(): Promise<Blob> {
   return response.blob();
 }
 
-export function downloadBlob(blob: Blob, filename: string) {
+function isIOS() {
+  return (
+    /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
+function showIOSImageSaveOverlay(blob: Blob) {
+  const url = URL.createObjectURL(blob);
+  const overlay = document.createElement("div");
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-label", "Сохранение изображения");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    inset: "0",
+    zIndex: "9999",
+    background: "rgba(0, 0, 0, 0.92)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "16px",
+    padding: "16px",
+    boxSizing: "border-box",
+  });
+
+  const hint = document.createElement("p");
+  hint.textContent = "Удерживайте изображение → «Сохранить в Фото»";
+  Object.assign(hint.style, {
+    margin: "0",
+    color: "#fff",
+    fontSize: "16px",
+    textAlign: "center",
+    fontFamily: "system-ui, sans-serif",
+  });
+
+  const img = document.createElement("img");
+  img.src = url;
+  img.alt = "Результат предсказания";
+  Object.assign(img.style, {
+    maxWidth: "100%",
+    maxHeight: "75vh",
+    borderRadius: "12px",
+    userSelect: "auto",
+    WebkitUserSelect: "auto",
+  });
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.textContent = "Закрыть";
+  Object.assign(close.style, {
+    border: "0",
+    borderRadius: "999px",
+    padding: "12px 24px",
+    fontSize: "16px",
+    cursor: "pointer",
+    background: "#fff",
+    color: "#370b27",
+  });
+
+  const cleanup = () => {
+    overlay.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  close.addEventListener("click", cleanup);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) cleanup();
+  });
+
+  overlay.append(hint, img, close);
+  document.body.appendChild(overlay);
+}
+
+export async function downloadBlob(blob: Blob, filename: string) {
+  const file = new File([blob], filename, {
+    type: blob.type || "application/octet-stream",
+  });
+  const shareData = { files: [file] };
+
+  if (isIOS()) {
+    if (navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
+    if (blob.type.startsWith("image/")) {
+      showIOSImageSaveOverlay(blob);
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: filename,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
+  link.href = url;
   link.download = filename;
-  link.href = URL.createObjectURL(blob);
+  link.rel = "noopener";
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(link.href);
+  document.body.removeChild(link);
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
