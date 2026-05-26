@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import {
@@ -15,8 +16,17 @@ const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь 
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.png";
 
+type ExportAction = "download" | "share";
+
 const Result = () => {
+  const [pendingAction, setPendingAction] = useState<ExportAction | null>(null);
+  const isExporting = pendingAction !== null;
+
   const handleDownload = async () => {
+    if (isExporting) return;
+
+    setPendingAction("download");
+
     try {
       const blob = await capturePageAsBlob();
       await downloadImage(blob, IMAGE_FILENAME);
@@ -26,16 +36,24 @@ const Result = () => {
         type: "text/plain;charset=utf-8",
       });
       await downloadFile(blob, "pionovyj-predskazatel.txt");
+    } finally {
+      setPendingAction(null);
     }
   };
 
   const handleShare = async () => {
+    if (isExporting) return;
+
+    setPendingAction("share");
+
     try {
       const blob = await capturePageAsBlob();
       await shareImage(blob, IMAGE_FILENAME);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");
+    } finally {
+      setPendingAction(null);
     }
   };
 
@@ -61,10 +79,22 @@ const Result = () => {
             <p>LUNAR</p>
           </div>
           <div className="result-actions">
-            <Button color="primary" type="button" onClick={handleDownload}>
+            <Button
+              color="primary"
+              type="button"
+              onClick={handleDownload}
+              disabled={isExporting}
+              loading={pendingAction === "download"}
+            >
               Скачать результат
             </Button>
-            <Button color="secondary" type="button" onClick={handleShare}>
+            <Button
+              color="secondary"
+              type="button"
+              onClick={handleShare}
+              disabled={isExporting}
+              loading={pendingAction === "share"}
+            >
               Пошерить
             </Button>
           </div>

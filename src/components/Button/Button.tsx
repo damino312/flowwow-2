@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import "./Button.css";
 
 type TButtonProps = {
   color: "primary" | "secondary";
@@ -6,6 +7,7 @@ type TButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
+  loading?: boolean;
 };
 
 const Button: FC<TButtonProps> = ({
@@ -14,11 +16,14 @@ const Button: FC<TButtonProps> = ({
   type,
   onClick,
   disabled,
+  loading = false,
 }) => {
+  const isDisabled = disabled || loading;
+
   return (
     <button
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
       className="button"
       style={
         color === "primary"
@@ -26,7 +31,9 @@ const Button: FC<TButtonProps> = ({
           : { background: "#FFAFA4" }
       }
       type={type}
+      aria-busy={loading}
     >
+      {loading && <span className="button__spinner" aria-hidden="true" />}
       {children}
     </button>
   );
