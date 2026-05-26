@@ -27,23 +27,17 @@ const Result = () => {
     try {
       const blob = await capturePageAsBlob();
       const file = new File([blob], IMAGE_FILENAME, { type: "image/png" });
+      const shareData = { files: [file] };
 
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: "Пионовый предсказатель",
-          text: SHARE_TEXT,
-        });
+      if (navigator.canShare?.(shareData)) {
+        await navigator.share(shareData);
         return;
       }
 
       downloadBlob(blob, IMAGE_FILENAME);
-
-      const vkUrl = `https://vk.com/share.php?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(SHARE_TEXT)}`;
-      window.open(vkUrl, "_blank", "noopener,noreferrer");
-    } catch {
-      const vkUrl = `https://vk.com/share.php?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(SHARE_TEXT)}`;
-      window.open(vkUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      alert("Не удалось поделиться результатом.");
     }
   };
 
@@ -59,9 +53,7 @@ const Result = () => {
             дни почувствуешь необъяснимую тягу к&nbsp;красивым цветам, это
             космос работает.
           </p>
-          <p>
-            Не&nbsp;спорь со&nbsp;звездами. Сделай красиво. Вот промокод*.
-          </p>
+          <p>Не&nbsp;спорь со&nbsp;звездами. Сделай красиво. Вот промокод*.</p>
         </div>
         <div className="gift">
           <img src="/src/assets/gift-3.svg" alt="gift" />
@@ -72,7 +64,7 @@ const Result = () => {
             Скачать результат
           </Button>
           <Button color="secondary" type="button" onClick={handleShare}>
-            Поделиться ВК
+            Пошерить
           </Button>
         </div>
         <p className="result-disclaimer">
