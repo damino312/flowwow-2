@@ -1,6 +1,11 @@
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
-import { capturePageAsBlob, downloadBlob } from "../../utils/capturePage";
+import {
+  capturePageAsBlob,
+  downloadFile,
+  downloadImage,
+  shareImage,
+} from "../../utils/capturePage";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
@@ -14,28 +19,20 @@ const Result = () => {
   const handleDownload = async () => {
     try {
       const blob = await capturePageAsBlob();
-      await downloadBlob(blob, IMAGE_FILENAME);
+      await downloadImage(blob, IMAGE_FILENAME);
     } catch {
       const name = sessionStorage.getItem("formName") || "";
       const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
-      await downloadBlob(blob, "pionovyj-predskazatel.txt");
+      await downloadFile(blob, "pionovyj-predskazatel.txt");
     }
   };
 
   const handleShare = async () => {
     try {
       const blob = await capturePageAsBlob();
-      const file = new File([blob], IMAGE_FILENAME, { type: "image/png" });
-      const shareData = { files: [file] };
-
-      if (navigator.canShare?.(shareData)) {
-        await navigator.share(shareData);
-        return;
-      }
-
-      await downloadBlob(blob, IMAGE_FILENAME);
+      await shareImage(blob, IMAGE_FILENAME);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");
