@@ -1,0 +1,116 @@
+.logo2 {
+  padding-top: 11.9rem;
+  margin-bottom: 11.3rem;
+}
+
+.home {
+  position: relative;
+  overflow: hidden;
+  padding: 1.6rem;
+
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo2 {
+    @media (max-width: 640px) {
+      margin-bottom: 6rem;
+      padding-top: 1.4rem;
+    }
+  }
+
+  h2 {
+    font-family: "Actay", sans-serif;
+    font-weight: 400;
+    font-size: 5.5rem;
+    line-height: 109%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #370b27;
+    margin: 0;
+
+    @media (max-width: 1023px) {
+      font-size: 4rem;
+    }
+
+    @media (max-width: 640px) {
+      font-size: 3rem;
+      margin-bottom: 1.6rem;
+    }
+  }
+
+  .home-text {
+    margin: 0;
+    padding-top: 1.6rem;
+    padding-bottom: 4rem;
+    padding-right: 8.9rem;
+    padding-left: 8.9rem;
+
+    @media (max-width: 640px) {
+      font-size: 1.6rem;
+      padding: 0;
+      padding-right: 3.4rem;
+      padding-left: 3.4rem;
+      margin-bottom: 4rem;
+    }
+  }
+
+  .container {
+    margin: 0;
+
+    @media (max-width: 640px) {
+      width: auto;
+      padding: 1.6rem;
+      margin-bottom: 23rem;
+    }
+  }
+}
+
+.home-bg {
+  background-image: url("../../assets/bg_1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  @media (max-width: 640px) {
+    background-image: url("../../assets/bg_mobile.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+  }
+}
+
+.peonie {
+  @media (max-width: 950px) {
+    display: none;
+  }
+
+  position: relative;
+
+  img {
+    width: 62%;
+    position: absolute;
+    height: auto;
+    bottom: -1.5rem;
+    right: -1.6rem;
+    border-radius: 4rem;
+
+    @media (max-width: 1200px) {
+      width: 63%;
+    }
+
+    @media (max-width: 1150px) {
+      width: 65%;
+    }
+
+    @media (max-width: 1100px) {
+      width: 67%;
+    }
+
+    @media (max-width: 950px) {
+      width: 69%;
+    }
+  }
+}

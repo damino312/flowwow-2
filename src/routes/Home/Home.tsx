@@ -1,7 +1,8 @@
 import { type FC } from "react";
-import { Container } from "../components/Container";
-import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { Container } from "../../components/Container";
+import Button from "../../components/Button";
+import "./Home.css";
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Home: FC = () => {
     <div className="home">
       <Container>
         <div className="logo2">
-          <img src="src/assets/logo-2.svg" alt="logo" />
+          <img src="/src/assets/logo-2.svg" alt="logo" />
         </div>
         <h2>Пионовый предсказатель</h2>
         <p className="home-text">
@@ -25,17 +26,9 @@ const Home: FC = () => {
         </Button>
       </Container>
       <div className="peonie">
-        <img
-          src="src/assets/peonie_1.png"
-          alt="peonie"
-          className="home-img"
-        />
-        <img
-          src="src/assets/peonie_3.png"
-          alt="peonie"
-          className="home-img"
-        />
-        <img src="src/assets/star.png" alt="peonie" className="home-img" />
+        <img src="/src/assets/peonie_1.png" alt="peonie" className="home-img" />
+        <img src="/src/assets/peonie_3.png" alt="peonie" className="home-img" />
+        <img src="/src/assets/star.png" alt="peonie" className="home-img" />
       </div>
     </div>
   );

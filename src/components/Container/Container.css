@@ -1,0 +1,10 @@
+.container {
+  margin: 3rem;
+  padding: 0 3rem 6rem;
+  border-radius: 24px;
+  width: 50%;
+  background:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6));
+  backdrop-filter: blur(59.400001525878906px);
+}

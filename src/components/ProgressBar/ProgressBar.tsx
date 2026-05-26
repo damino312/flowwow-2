@@ -1,15 +1,16 @@
-import {useEffect, useState, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, type FC } from "react";
+import { useNavigate } from "react-router-dom";
+import "./ProgressBar.css";
 
 type ProgressBarProps = {
-    progress?: number
-}
+  progress?: number;
+};
 
 const ProgressBar: FC<ProgressBarProps> = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -21,20 +22,20 @@ const ProgressBar: FC<ProgressBarProps> = () => {
         });
       }, 500);
     } else if (progress >= 100) {
-        setIsLoading(false);
-          navigate('/promo')
-      }
+      setIsLoading(false);
+      navigate("/promo");
+    }
     return () => clearInterval(interval);
   }, [isLoading, navigate, progress]);
 
   return (
     <div className="progress-container">
       <div className="progress-bar">
-        <div 
-          className="progress-fill" 
+        <div
+          className="progress-fill"
           style={{
             width: `${progress}%`,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: "#FFFFFF",
           }}
         />
       </div>

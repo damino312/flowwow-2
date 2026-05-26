@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "./Button";
-import { formatDateInput, validateDate } from "../utils/validators";
+import Button from "../Button";
+import { formatDateInput, validateDate } from "../../utils/validators";
+import "./Form.css";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -10,7 +11,6 @@ const Form = () => {
 
   const navigate = useNavigate();
 
-  // При монтировании проверяем sessionStorage
   useEffect(() => {
     const savedName = sessionStorage.getItem("formName");
     if (savedName) {
@@ -21,7 +21,6 @@ const Form = () => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
-    // Сохраняем в sessionStorage
     sessionStorage.setItem("formName", value);
   };
 
@@ -32,7 +31,7 @@ const Form = () => {
       setError(validation.error || "");
       return;
     }
-    navigate(`/loading`);
+    navigate("/loading");
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +85,7 @@ const Form = () => {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <div>
-        <img src="src/assets/clock.png" alt="clock" className="clock" />
+        <img src="/src/assets/clock.png" alt="clock" className="clock" />
       </div>
       <div className="form-group">
         <input
