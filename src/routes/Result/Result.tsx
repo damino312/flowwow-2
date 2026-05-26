@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import {
   capturePageAsBlob,
   downloadFile,
   downloadImage,
+  preloadCaptureAssets,
   shareImage,
 } from "../../utils/capturePage";
 import gift3 from "../../assets/gift-3.svg";
@@ -21,6 +22,10 @@ type ExportAction = "download" | "share";
 const Result = () => {
   const [pendingAction, setPendingAction] = useState<ExportAction | null>(null);
   const isExporting = pendingAction !== null;
+
+  useEffect(() => {
+    preloadCaptureAssets();
+  }, []);
 
   const handleDownload = async () => {
     if (isExporting) return;
