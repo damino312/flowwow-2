@@ -1,6 +1,7 @@
 import { type FC } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import logo from "../../assets/logo.svg";
 import "./Layout.css";
 
 const MAIN_CLASS_BY_PATH: Record<string, string> = {
@@ -22,7 +23,7 @@ const Layout: FC = () => {
           onClick={() => navigate("/")}
           aria-label="На главную"
         >
-          <img src="/src/assets/logo.svg" alt="FLOWWOW" />
+          <img src={logo} alt="FLOWWOW" />
         </button>
         <h1 className="visually-hidden">FLOWWOW: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
       </header>

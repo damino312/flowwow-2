@@ -1,5 +1,6 @@
 import { type FC } from "react";
 import ProgressBar from "../../components/ProgressBar";
+import gift from "../../assets/gift.png";
 import "./Loading.css";
 
 type TLoadingProps = {
@@ -9,7 +10,7 @@ type TLoadingProps = {
 const Loading: FC<TLoadingProps> = () => {
   return (
     <div className="loading">
-      <img src="/src/assets/gift.png" alt="gift" />
+      <img src={gift} alt="gift" />
       <p>
         Анализируем положение цветочных планет, делаем выгрузку заказов за 5
         лет

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import { formatDateInput, validateDate } from "../../utils/validators";
+import clock from "../../assets/clock.png";
 import "./Form.css";
 
 const Form = () => {
@@ -74,7 +75,8 @@ const Form = () => {
     ];
 
     if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
-    if (!/^\d$/.test(e.key)) e.preventDefault();
+    if (/^\d$/.test(e.key) || e.key === ".") return;
+    e.preventDefault();
   };
 
   const handleBlur = () => {
@@ -85,7 +87,7 @@ const Form = () => {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <div>
-        <img src="/src/assets/clock.png" alt="clock" className="clock" />
+        <img src={clock} alt="clock" className="clock" />
       </div>
       <div className="form-group">
         <input
@@ -101,7 +103,7 @@ const Form = () => {
       <div className="form-group">
         <input
           type="text"
-          inputMode="numeric"
+          inputMode="decimal"
           id="date"
           value={date}
           onChange={handleDateChange}

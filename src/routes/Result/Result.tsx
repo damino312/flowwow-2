@@ -1,6 +1,7 @@
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import { capturePageAsBlob, downloadBlob } from "../../utils/capturePage";
+import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
 const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь мне пионы? Это не я придумала — это астрология, наука и вообще судьба. Так что, если ты вдруг в ближайшие дни почувствуешь необъяснимую тягу к красивым цветам, это космос работает.
@@ -56,7 +57,7 @@ const Result = () => {
           <p>Не&nbsp;спорь со&nbsp;звездами. Сделай красиво. Вот промокод*.</p>
         </div>
         <div className="gift">
-          <img src="/src/assets/gift-3.svg" alt="gift" />
+          <img src={gift3} alt="gift" />
           <p>LUNAR</p>
         </div>
         <div className="result-actions">

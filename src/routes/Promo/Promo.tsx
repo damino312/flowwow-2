@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import { monthPrediction } from "../../const/copyrights";
+import gift2 from "../../assets/gift-2.svg";
 import "./Promo.css";
 
 const Promo: FC = () => {
@@ -31,7 +32,7 @@ const Promo: FC = () => {
       <Container>
         <div>
           <div className="gift">
-            <img src="/src/assets/gift-2.svg" alt="gift" />
+            <img src={gift2} alt="gift" />
           </div>
           <p className="date">{monthPrediction(month)?.date}</p>
           <p className="text">{monthPrediction(month)?.text}</p>
