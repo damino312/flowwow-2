@@ -1,37 +1,119 @@
-const CAPTURE_SELECTOR = "#root";
+const CAPTURE_ROOT_SELECTOR = "main.result-layout";
+const FALLBACK_SELECTOR = "#root";
+
+const EXPAND_LAYOUT_SELECTORS = [
+  "main",
+  ".container",
+  ".result",
+  ".result-body",
+].join(", ");
+
+function waitForPaint() {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+}
 
 function getCapturePaddingX() {
   return window.matchMedia("(max-width: 640px)").matches ? "1.2rem" : "3rem";
 }
 
-function shouldIncludeInCapture(node: HTMLElement) {
-  return !node.closest(".result-actions");
+function resolveCaptureElement(): HTMLElement {
+  const resultMain = document.querySelector(CAPTURE_ROOT_SELECTOR);
+  if (resultMain instanceof HTMLElement) return resultMain;
+
+  const root = document.querySelector(FALLBACK_SELECTOR);
+  if (root instanceof HTMLElement) return root;
+
+  throw new Error("Не удалось найти страницу для экспорта");
+}
+
+function expandCloneForFullContent(root: HTMLElement) {
+  const nodes = [
+    root,
+    ...root.querySelectorAll<HTMLElement>(EXPAND_LAYOUT_SELECTORS),
+  ];
+
+  nodes.forEach((el) => {
+    Object.assign(el.style, {
+      overflow: "visible",
+      minHeight: "auto",
+      height: "auto",
+      maxHeight: "none",
+    });
+
+    if (el.classList.contains("result") || el.classList.contains("result-body")) {
+      el.style.flex = "none";
+    }
+  });
+}
+
+function removeActionsFromClone(root: HTMLElement) {
+  root.querySelectorAll(".result-actions").forEach((node) => node.remove());
+}
+
+function createCaptureClone(source: HTMLElement) {
+  const clone = source.cloneNode(true) as HTMLElement;
+  clone.removeAttribute("id");
+  clone.setAttribute("aria-hidden", "true");
+
+  removeActionsFromClone(clone);
+  expandCloneForFullContent(clone);
+
+  const width = source.getBoundingClientRect().width;
+
+  Object.assign(clone.style, {
+    position: "fixed",
+    left: "-10000px",
+    top: "0",
+    opacity: "0",
+    pointerEvents: "none",
+    zIndex: "-1",
+    width: `${width}px`,
+    overflow: "visible",
+    boxSizing: "border-box",
+    paddingLeft: getCapturePaddingX(),
+    paddingRight: getCapturePaddingX(),
+  });
+
+  document.body.appendChild(clone);
+  return clone;
+}
+
+function measureClone(clone: HTMLElement) {
+  return {
+    width: Math.ceil(clone.scrollWidth),
+    height: Math.ceil(clone.scrollHeight),
+  };
 }
 
 export async function capturePageAsPng(): Promise<string> {
   const { toPng } = await import("html-to-image");
-  const page = document.querySelector(CAPTURE_SELECTOR);
+  const source = resolveCaptureElement();
+  const clone = createCaptureClone(source);
+  await waitForPaint();
 
-  if (!page) {
-    throw new Error("Не удалось найти страницу для экспорта");
+  const { width, height } = measureClone(clone);
+
+  try {
+    return await toPng(clone, {
+      pixelRatio: 2,
+      cacheBust: true,
+      backgroundColor: "#ffffff",
+      width,
+      height,
+      style: {
+        width: `${width}px`,
+        height: `${height}px`,
+        overflow: "visible",
+        boxSizing: "border-box",
+      },
+    });
+  } finally {
+    clone.remove();
   }
-
-  const element = page as HTMLElement;
-
-  // filter скрывает кнопки только во внутреннем клоне — на экране ничего не меняется
-  return toPng(element, {
-    pixelRatio: 2,
-    cacheBust: true,
-    backgroundColor: "#ffffff",
-    filter: (node) =>
-      node instanceof HTMLElement ? shouldIncludeInCapture(node) : true,
-    style: {
-      boxSizing: "border-box",
-      paddingLeft: getCapturePaddingX(),
-      paddingRight: getCapturePaddingX(),
-      // backgroundColor: "#ffffff",
-    },
-  });
 }
 
 export async function capturePageAsBlob(): Promise<Blob> {
