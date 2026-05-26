@@ -1,3 +1,4 @@
+const { toPng } = await import("html-to-image");
 const CAPTURE_SELECTOR = "#root";
 
 function getCapturePaddingX() {
@@ -18,7 +19,6 @@ function shouldIncludeInCapture(node: HTMLElement) {
 }
 
 export async function capturePageAsPng(): Promise<string> {
-  const { toPng } = await import("html-to-image");
   const element = resolveCaptureElement();
 
   return toPng(element, {
