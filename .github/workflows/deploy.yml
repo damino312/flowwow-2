@@ -1,5 +1,7 @@
-# https://vite.dev/guide/static-deploy.html#github-pages
-name: Deploy static content to Pages
+# Deploy Vite build output to GitHub Pages branch `pages`
+# GitHub Pages must be configured in Settings → Pages:
+# Source = Deploy from a branch → Branch = `pages`
+name: Deploy dist to pages branch
 
 on:
   push:
@@ -7,19 +9,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: 'pages'
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,18 +34,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      # React Router: refresh on /prediction etc.
+      # SPA: for direct refresh /prediction etc GitHub will serve 404.html
       - name: SPA fallback
         run: cp dist/index.html dist/404.html
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish to pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: './dist'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: pages
+          force_orphan: true
+          keep_files: false
