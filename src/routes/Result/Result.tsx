@@ -14,7 +14,7 @@ const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь 
 
 Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
 
-const IMAGE_FILENAME = "pionovyj-predskazatel.png";
+const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
 
 type ExportAction = "download" | "share";
 
