@@ -124,23 +124,15 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    width: 25.6rem;
     max-width: 100%;
     background-color: #fff;
     border-radius: 100px;
-    padding: 1.4rem 1rem;
+    padding: 1.4rem 4.4rem 1.4rem 1rem;
     margin-bottom: 0;
-
-    @media (max-width: 640px) {
-      gap: clamp(0.6rem, 1.5dvh, 1rem);
-      width: min(25.6rem, 100%);
-      padding: clamp(0.7rem, 1.4dvh, 1.2rem) clamp(0.8rem, 2vw, 1rem);
-    }
 
     img {
       flex-shrink: 0;
       width: auto;
-      height: clamp(2.4rem, 5dvh, 3.6rem);
     }
 
     p {
