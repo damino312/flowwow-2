@@ -1,4 +1,4 @@
-import { toPng } from "html-to-image";
+import { toJpeg } from "html-to-image";
 
 const CAPTURE_SELECTOR = "#root";
 
@@ -22,12 +22,12 @@ function shouldIncludeInCapture(node: HTMLElement) {
 export async function capturePageAsPng(): Promise<string> {
   const element = resolveCaptureElement();
 
-  return toPng(element, {
-    pixelRatio: 1,
-    cacheBust: false,
+  return toJpeg(element, {
+    pixelRatio: 2,
+    cacheBust: true,
     backgroundColor: "#ffffff",
-    // filter: (node) =>
-    //   node instanceof HTMLElement ? shouldIncludeInCapture(node) : true,
+    filter: (node) =>
+      node instanceof HTMLElement ? shouldIncludeInCapture(node) : true,
     style: {
       boxSizing: "border-box",
       paddingLeft: getCapturePaddingX(),
