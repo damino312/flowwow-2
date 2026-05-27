@@ -1,4 +1,6 @@
-const CAPTURE_SELECTOR = "#root";
+import { toJpeg } from "html-to-image";
+
+const CAPTURE_SELECTOR = "div.layout";
 
 function getCapturePaddingX() {
   return window.matchMedia("(max-width: 640px)").matches ? "1.2rem" : "3rem";
@@ -18,10 +20,9 @@ function shouldIncludeInCapture(node: HTMLElement) {
 }
 
 export async function capturePageAsPng(): Promise<string> {
-  const { toPng } = await import("html-to-image");
   const element = resolveCaptureElement();
 
-  return toPng(element, {
+  return toJpeg(element, {
     pixelRatio: 2,
     cacheBust: true,
     backgroundColor: "#ffffff",
@@ -79,9 +80,9 @@ export async function shareImage(blob: Blob, filename: string) {
 /** Скачивание картинки через <a download> */
 export async function downloadImage(blob: Blob, filename: string) {
   const imageBlob =
-    blob.type === "image/png"
+    blob.type === "image/jpeg"
       ? blob
-      : new Blob([await blob.arrayBuffer()], { type: "image/png" });
+      : new Blob([await blob.arrayBuffer()], { type: "image/jpeg" });
 
   triggerAnchorDownload(imageBlob, filename);
 }
