@@ -26,8 +26,8 @@ export async function capturePageAsPng(): Promise<string> {
     pixelRatio: 1,
     cacheBust: false,
     backgroundColor: "#ffffff",
-    filter: (node) =>
-      node instanceof HTMLElement ? shouldIncludeInCapture(node) : true,
+    // filter: (node) =>
+    //   node instanceof HTMLElement ? shouldIncludeInCapture(node) : true,
     style: {
       boxSizing: "border-box",
       paddingLeft: getCapturePaddingX(),
