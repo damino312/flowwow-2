@@ -42,6 +42,12 @@ export async function capturePageAsBlob(): Promise<Blob> {
   return response.blob();
 }
 
+function blobToFile(blob: Blob, filename: string) {
+  return new File([blob], filename, {
+    type: blob.type || "application/octet-stream",
+  });
+}
+
 function triggerAnchorDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -52,6 +58,87 @@ function triggerAnchorDownload(blob: Blob, filename: string) {
   link.click();
   document.body.removeChild(link);
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function shouldUseClipboardShare(): boolean {
+  const isMobileUa = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobileUa) return false;
+
+  return window.matchMedia("(pointer: fine)").matches;
+}
+
+async function blobToPng(blob: Blob): Promise<Blob> {
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    throw new Error("Не удалось подготовить изображение");
+  }
+
+  context.drawImage(bitmap, 0, 0);
+  bitmap.close();
+
+  const pngBlob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve, "image/png");
+  });
+
+  if (!pngBlob) {
+    throw new Error("Не удалось подготовить изображение");
+  }
+
+  return pngBlob;
+}
+
+async function copyImageToClipboard(blob: Blob): Promise<void> {
+  if (!navigator.clipboard?.write) {
+    throw new Error("Clipboard is not supported");
+  }
+
+  const pngBlob = await blobToPng(blob);
+
+  await navigator.clipboard.write([
+    new ClipboardItem({
+      "image/png": Promise.resolve(pngBlob),
+    }),
+  ]);
+}
+
+/** Системное меню «Поделиться»: скрин + текст */
+export async function shareImageWithText(
+  blob: Blob,
+  filename: string,
+  message: string,
+): Promise<void> {
+  if (shouldUseClipboardShare()) {
+    await copyImageToClipboard(blob);
+    window.alert(
+      "Картинка скопирована.\n\n1. Вставьте её в чат (⌘V или Ctrl+V).\n2. Нажмите OK — скопируем текст для подписи.",
+    );
+    await navigator.clipboard.writeText(message);
+    return;
+  }
+
+  if (!navigator.share) {
+    throw new Error("Sharing is not supported");
+  }
+
+  const file = blobToFile(blob, filename);
+  const filesOnly: ShareData = { files: [file] };
+
+  if (!navigator.canShare?.(filesOnly)) {
+    throw new Error("Sharing files is not supported");
+  }
+
+  await navigator.share(filesOnly);
+
+  try {
+    await navigator.clipboard.writeText(message);
+  } catch {
+    /* подпись необязательна */
+  }
 }
 
 /** Скачивание картинки через <a download> */
