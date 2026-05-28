@@ -14,7 +14,7 @@ const ShareMeta = ({ birthDate, shareUrl }: ShareMetaProps) => {
   const description = buildShareOgDescription(birthDate);
   const imageUrl = new URL(
     `${import.meta.env.BASE_URL}og-share.png`,
-    window.location.origin,
+    window.location.href,
   ).href;
 
   return (
@@ -26,6 +26,10 @@ const ShareMeta = ({ birthDate, shareUrl }: ShareMetaProps) => {
       <meta property="og:title" content={SHARE_OG_TITLE} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:secure_url" content={imageUrl} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="499" />
+      <meta property="og:image:height" content="358" />
       <meta property="og:url" content={shareUrl} />
       <meta property="og:locale" content="ru_RU" />
       <meta name="twitter:card" content="summary_large_image" />

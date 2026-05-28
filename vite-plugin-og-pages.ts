@@ -17,14 +17,13 @@ function escapeHtml(value: string): string {
     .replaceAll('"', "&quot;");
 }
 
+const OG_IMAGE_WIDTH = 499;
+const OG_IMAGE_HEIGHT = 358;
+
 function joinUrl(siteUrl: string, base: string, path: string): string {
-  const normalizedSite = siteUrl.replace(/\/$/, "");
-  const normalizedBase = base.startsWith("/") ? base : `/${base}`;
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${normalizedSite}${normalizedBase}${normalizedPath}`.replace(
-    /([^:]\/)\/+/g,
-    "$1",
-  );
+  const basePath = base.endsWith("/") ? base : `${base}/`;
+  const fullPath = `${basePath}${path.replace(/^\//, "")}`;
+  return new URL(fullPath, `${siteUrl.replace(/\/$/, "")}/`).href;
 }
 
 function renderOgPage(options: {
@@ -56,6 +55,10 @@ function renderOgPage(options: {
     <meta property="og:title" content="${escapeHtml(SHARE_OG_TITLE)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+    <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
+    <meta property="og:image:height" content="${OG_IMAGE_HEIGHT}" />
     <meta property="og:image:alt" content="${escapeHtml(SHARE_OG_TITLE)}" />
     <meta property="og:url" content="${escapeHtml(pageUrl)}" />
     <meta property="og:locale" content="ru_RU" />
@@ -101,15 +104,21 @@ export function ogPagesPlugin(options: OgPagesPluginOptions): Plugin {
     name: "og-pages",
     closeBundle() {
       const { siteUrl, base } = options;
-
-      if (!siteUrl) {
-        console.warn(
-          "[og-pages] VITE_SITE_URL is not set — Open Graph image URLs may be invalid in production.",
-        );
-      }
-
       const outputRoot = join(process.cwd(), "dist");
-      const resolvedSiteUrl = siteUrl || "http://localhost:4173";
+      let resolvedSiteUrl = siteUrl;
+
+      if (!resolvedSiteUrl) {
+        if (process.env.VERCEL === "1") {
+          throw new Error(
+            "[og-pages] На Vercel нужен VERCEL_URL или VITE_SITE_URL для og:image.",
+          );
+        }
+
+        console.warn(
+          "[og-pages] VITE_SITE_URL не задан — og:image укажет на localhost.",
+        );
+        resolvedSiteUrl = "http://localhost:4173";
+      }
 
       for (const month of getBirthMonthsForOgPages()) {
         const predictionDate = monthPrediction(month)?.date;
