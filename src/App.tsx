@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Home from './routes/Home';
-import Prediction from './routes/Prediction';
-import Promo from './routes/Promo';
-import Loading from './routes/Loading';
-import Result from './routes/Result';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./routes/Home";
+import Prediction from "./routes/Prediction";
+import Promo from "./routes/Promo";
+import Loading from "./routes/Loading";
+import Result from "./routes/Result";
 
 function App() {
   return (

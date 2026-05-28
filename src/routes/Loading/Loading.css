@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 18rem;
+  padding: 2rem;
 
   p {
     font-weight: 400;
@@ -16,9 +16,7 @@
 
   @media (max-width: 640px) {
     margin: 0;
-    padding: 0;
-    padding-top: 20rem;
-    padding-bottom: 15rem;
+    padding: 2rem 1.6rem;
 
     p {
       font-size: 1.6rem;

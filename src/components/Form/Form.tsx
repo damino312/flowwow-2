@@ -103,7 +103,7 @@ const Form = () => {
       <div className="form-group">
         <input
           type="text"
-          inputMode="decimal"
+          inputMode="numeric"
           id="date"
           value={date}
           onChange={handleDateChange}

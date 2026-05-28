@@ -18,14 +18,21 @@
 #root {
   font-family: "Montserrat", sans-serif;
   color: #370b27;
-  max-width: 1440px;
+  max-width: calc(1440px + 3rem);
   margin: 0 auto;
   text-align: center;
   width: 100%;
-  height: auto;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 html {
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   font-size: 10px;
 
   @media (min-width: 640px) {
@@ -36,12 +43,17 @@ html {
   }
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 375px;
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
 }
 
 .visually-hidden {
@@ -81,12 +93,24 @@ button {
 
 main {
   position: relative;
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background-color: #370b27;
   border-radius: 40px;
 
   @media (max-width: 640px) {
     border-radius: 30px;
+  }
+
+  > * {
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 }
