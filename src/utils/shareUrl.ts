@@ -17,21 +17,33 @@ export async function sharePageLink(
   url: string,
   message: string,
 ): Promise<void> {
-  const shareData: ShareData = { text: message, url };
+  const textWithUrl = `${message}\n\n${url}`;
 
-  if (navigator.share) {
-    if (!navigator.canShare || navigator.canShare(shareData)) {
-      await navigator.share(shareData);
-      return;
-    }
+  if (!navigator.share) {
+    await navigator.clipboard.writeText(textWithUrl);
+    return;
+  }
 
-    if (navigator.canShare?.({ url })) {
-      await navigator.share({ url });
-      return;
+  // Telegram, WhatsApp и др. берут только text; url отдельным полем часто теряется
+  try {
+    await navigator.share({ text: textWithUrl });
+    return;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw error;
     }
   }
 
-  await navigator.clipboard.writeText(`${message}\n${url}`);
+  try {
+    await navigator.share({ url, title: message });
+    return;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw error;
+    }
+  }
+
+  await navigator.clipboard.writeText(textWithUrl);
 }
 
 export function resolveOgImageUrl(): string {
