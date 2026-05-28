@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import ShareMeta from "../../components/ShareMeta";
+import { buildOgShareUrl } from "../../utils/shareUrl";
 import {
   RESULT_PARAM_DATE,
   RESULT_PARAM_NAME,
@@ -131,13 +132,7 @@ const Result = () => {
 
   if (!name || !date) return null;
 
-  const shareUrl = new URL(
-    `${import.meta.env.BASE_URL}result?${new URLSearchParams({
-      [RESULT_PARAM_NAME]: name,
-      [RESULT_PARAM_DATE]: date,
-    })}`,
-    window.location.origin,
-  ).href;
+  const shareUrl = buildOgShareUrl(name, date);
 
   return (
     <Container>

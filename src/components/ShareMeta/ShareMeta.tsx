@@ -4,18 +4,30 @@ import {
   SHARE_OG_TITLE,
   buildShareOgDescription,
 } from "../../const/shareOg";
+import { resolveOgImageUrl } from "../../utils/shareUrl";
 
 type ShareMetaProps = {
   birthDate: string;
   shareUrl: string;
 };
 
+function readOgImageDimensions(): { width: string; height: string } {
+  const width =
+    document
+      .querySelector('meta[property="og:image:width"]')
+      ?.getAttribute("content") ?? "1200";
+  const height =
+    document
+      .querySelector('meta[property="og:image:height"]')
+      ?.getAttribute("content") ?? "630";
+
+  return { width, height };
+}
+
 const ShareMeta = ({ birthDate, shareUrl }: ShareMetaProps) => {
   const description = buildShareOgDescription(birthDate);
-  const imageUrl = new URL(
-    `${import.meta.env.BASE_URL}og-share.png`,
-    window.location.href,
-  ).href;
+  const imageUrl = resolveOgImageUrl();
+  const { width, height } = readOgImageDimensions();
 
   return (
     <Helmet>
@@ -28,8 +40,8 @@ const ShareMeta = ({ birthDate, shareUrl }: ShareMetaProps) => {
       <meta property="og:image" content={imageUrl} />
       <meta property="og:image:secure_url" content={imageUrl} />
       <meta property="og:image:type" content="image/png" />
-      <meta property="og:image:width" content="499" />
-      <meta property="og:image:height" content="358" />
+      <meta property="og:image:width" content={width} />
+      <meta property="og:image:height" content={height} />
       <meta property="og:url" content={shareUrl} />
       <meta property="og:locale" content="ru_RU" />
       <meta name="twitter:card" content="summary_large_image" />
