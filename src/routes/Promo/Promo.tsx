@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import { monthPrediction } from "../../const/copyrights";
+import { buildResultPath } from "../../utils/resultParams";
 import gift2 from "../../assets/gift-2.svg";
 import "./Promo.css";
 
@@ -41,7 +42,11 @@ const Promo: FC = () => {
         <Button
           color="primary"
           type="button"
-          onClick={() => navigate("/result")}
+          onClick={() => {
+            const name = sessionStorage.getItem("formName") || "";
+            const date = sessionStorage.getItem("formDate") || "";
+            navigate(buildResultPath(name, date));
+          }}
         >
           Намекнем ему?
         </Button>
