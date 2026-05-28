@@ -10,10 +10,6 @@ export function buildResultPath(name: string, date: string): string {
   return `/result?${params.toString()}`;
 }
 
-export function buildResultShareUrl(name: string, date: string): string {
-  return `${window.location.origin}${buildResultPath(name, date)}`;
-}
-
 export function readResultParams(
   searchParams: URLSearchParams,
 ): { name: string; date: string } | null {

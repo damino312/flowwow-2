@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import ShareMeta from "../../components/ShareMeta";
-import { buildOgShareUrl } from "../../utils/shareUrl";
+import { buildResultShareUrl, sharePageLink } from "../../utils/shareUrl";
 import {
   RESULT_PARAM_DATE,
   RESULT_PARAM_NAME,
@@ -13,7 +13,6 @@ import {
   capturePageAsBlob,
   downloadFile,
   downloadImage,
-  shareImageWithText,
 } from "../../utils/capturePage";
 import { readResultParams } from "../../utils/resultParams";
 import { validateDate } from "../../utils/validators";
@@ -108,23 +107,14 @@ const Result = () => {
     if (isExporting || !name || !date) return;
 
     setPendingAction("share");
+    const shareUrl = buildResultShareUrl(name, date);
     const shareText = buildShareText(date);
 
     try {
-      const blob = await capturePageAsBlob();
-      await shareImageWithText(blob, IMAGE_FILENAME, shareText);
+      await sharePageLink(shareUrl, shareText);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-
-      try {
-        const blob = await capturePageAsBlob();
-        await downloadImage(blob, IMAGE_FILENAME);
-        alert(
-          "Не удалось скопировать в буфер. Картинка сохранена в «Загрузки» — прикрепите её в чат вручную.",
-        );
-      } catch {
-        alert("Не удалось поделиться результатом.");
-      }
+      alert("Не удалось поделиться результатом.");
     } finally {
       setPendingAction(null);
     }
@@ -132,7 +122,7 @@ const Result = () => {
 
   if (!name || !date) return null;
 
-  const shareUrl = buildOgShareUrl(name, date);
+  const shareUrl = buildResultShareUrl(name, date);
 
   return (
     <Container>
