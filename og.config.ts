@@ -10,7 +10,7 @@ export function getSiteOrigin(env: Record<string, string>): string {
 
 export function createResultOgOptions(siteOrigin: string): Options {
   const resultUrl = `${siteOrigin}/result`;
-  const imageUrl = `${siteOrigin}/og.png`;
+  const imageUrl = `${siteOrigin}/og.webp`;
 
   const title = RESULT_SHARE_TITLE;
   const description = RESULT_SHARE_DESCRIPTION;
