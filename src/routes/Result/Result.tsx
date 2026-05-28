@@ -14,6 +14,7 @@ import {
   RESULT_PARAM_NAME,
 } from "../../utils/resultParams";
 import { validateDate } from "../../utils/validators";
+import { RESULT_SHARE_TITLE } from "../../constants/share";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
@@ -22,7 +23,7 @@ const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь 
 Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
-const SHARE_TITLE = "Пионовый предсказатель";
+const SHARE_TITLE = RESULT_SHARE_TITLE;
 
 type ExportAction = "download" | "share";
 
@@ -72,6 +73,16 @@ const Result = () => {
 
     navigate("/", { replace: true });
   }, [navigate, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (!name || !date) return;
+
+    document.title = SHARE_TITLE;
+
+    return () => {
+      document.title = "Пионовый предсказатель";
+    };
+  }, [name, date]);
 
   const handleDownload = async () => {
     if (isExporting) return;
