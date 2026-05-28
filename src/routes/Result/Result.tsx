@@ -2,27 +2,28 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
+import ShareMeta from "../../components/ShareMeta";
+import { buildShareUserMessage } from "../../const/shareOg";
 import {
   capturePageAsBlob,
   downloadFile,
   downloadImage,
 } from "../../utils/capturePage";
 import {
-  buildResultShareUrl,
   readResultParams,
   RESULT_PARAM_DATE,
   RESULT_PARAM_NAME,
 } from "../../utils/resultParams";
+import { buildOgShareUrl, shareOpenGraphLink } from "../../utils/shareUrl";
 import { validateDate } from "../../utils/validators";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
-const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь мне пионы? Это не я придумала — это астрология, наука и вообще судьба. Так что, если ты вдруг в ближайшие дни почувствуешь необъяснимую тягу к красивым цветам, это космос работает.
+const DOWNLOAD_FALLBACK_TEXT = `А ты знаешь, что вот-вот подаришь мне пионы? Это не я придумала — это астрология, наука и вообще судьба. Так что, если ты вдруг в ближайшие дни почувствуешь необъяснимую тягу к красивым цветам, это космос работает.
 
 Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
-const SHARE_TITLE = "Пионовый предсказатель";
 
 type ExportAction = "download" | "share";
 
@@ -82,7 +83,7 @@ const Result = () => {
       const blob = await capturePageAsBlob();
       await downloadImage(blob, IMAGE_FILENAME);
     } catch {
-      const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
+      const blob = new Blob([`${name}\n\n${DOWNLOAD_FALLBACK_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
       await downloadFile(blob, "pionovyj-predskazatel.txt");
@@ -96,23 +97,11 @@ const Result = () => {
 
     setPendingAction("share");
 
-    const shareUrl = buildResultShareUrl(name, date);
-    const shareData = {
-      title: SHARE_TITLE,
-      text: SHARE_TEXT,
-      url: shareUrl,
-    };
+    const shareUrl = buildOgShareUrl(name, date);
+    const shareText = buildShareUserMessage(date);
 
     try {
-      if (navigator.share) {
-        if (!navigator.canShare || navigator.canShare(shareData)) {
-          await navigator.share(shareData);
-          return;
-        }
-      }
-
-      await navigator.clipboard.writeText(shareUrl);
-      alert("Ссылка скопирована в буфер обмена");
+      await shareOpenGraphLink(shareUrl, shareText);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");
@@ -123,8 +112,11 @@ const Result = () => {
 
   if (!name || !date) return null;
 
+  const shareUrl = buildOgShareUrl(name, date);
+
   return (
     <Container>
+      <ShareMeta birthDate={date} shareUrl={shareUrl} />
       <div className="result">
         <div className="result-body">
           <p className="name">{name}</p>

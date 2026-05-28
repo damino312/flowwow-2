@@ -9,7 +9,6 @@ function getCapturePaddingX() {
 function resolveCaptureElement(): HTMLElement {
   const root = document.querySelector(CAPTURE_SELECTOR);
 
-  console.log(root);
   if (root instanceof HTMLElement) return root;
 
   throw new Error("Не удалось найти страницу для экспорта");
@@ -43,12 +42,6 @@ export async function capturePageAsBlob(): Promise<Blob> {
   return response.blob();
 }
 
-function blobToFile(blob: Blob, filename: string) {
-  return new File([blob], filename, {
-    type: blob.type || "application/octet-stream",
-  });
-}
-
 function triggerAnchorDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -59,22 +52,6 @@ function triggerAnchorDownload(blob: Blob, filename: string) {
   link.click();
   document.body.removeChild(link);
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-/** Системное меню «Поделиться» (Telegram, AirDrop и т.д.) */
-export async function shareImage(blob: Blob, filename: string) {
-  const file = blobToFile(blob, filename);
-  const shareData = { files: [file] };
-
-  if (!navigator.share) {
-    throw new Error("Sharing is not supported");
-  }
-
-  if (navigator.canShare && !navigator.canShare(shareData)) {
-    throw new Error("Sharing files is not supported");
-  }
-
-  await navigator.share(shareData);
 }
 
 /** Скачивание картинки через <a download> */

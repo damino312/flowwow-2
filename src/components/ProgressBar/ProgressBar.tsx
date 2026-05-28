@@ -13,7 +13,7 @@ const ProgressBar: FC<ProgressBarProps> = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    let interval: number | undefined;
+    let interval: ReturnType<typeof setInterval> | undefined;
     if (isLoading && progress < 100) {
       interval = setInterval(() => {
         setProgress((prev) => {
