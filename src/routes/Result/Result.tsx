@@ -160,7 +160,7 @@ const Result = () => {
               disabled={isExporting}
               loading={pendingAction === "share"}
             >
-              Пошерить
+              Поделиться
             </Button>
           </div>
         </div>
