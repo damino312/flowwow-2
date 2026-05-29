@@ -108,22 +108,12 @@ const Result = () => {
     setPendingAction("share");
 
     const shareUrl = buildResultShareUrl(name, date);
-    const shareData = {
-      title: SHARE_TITLE,
-      text: SHARE_TEXT,
-      url: shareUrl,
-    };
 
     try {
       if (navigator.share) {
-        if (!navigator.canShare || navigator.canShare(shareData)) {
-          await navigator.share(shareData);
-          return;
-        }
+        await navigator.share({ url: shareUrl });
+        return;
       }
-
-      await navigator.clipboard.writeText(shareUrl);
-      alert("Ссылка скопирована в буфер обмена");
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");
