@@ -8,10 +8,11 @@ import {
   downloadImage,
 } from "../../utils/capturePage";
 import {
+  buildResultSearchParams,
   buildResultShareUrl,
+  hasResultParams,
   readResultParams,
-  RESULT_PARAM_DATE,
-  RESULT_PARAM_NAME,
+  RESULT_PARAM,
 } from "../../utils/resultParams";
 import { validateDate } from "../../utils/validators";
 import { RESULT_SHARE_TITLE } from "../../constants/share";
@@ -36,11 +37,7 @@ const Result = () => {
   const isExporting = pendingAction !== null;
 
   useEffect(() => {
-    const hasUrlParams =
-      searchParams.has(RESULT_PARAM_NAME) ||
-      searchParams.has(RESULT_PARAM_DATE);
-
-    if (hasUrlParams) {
+    if (hasResultParams(searchParams)) {
       const fromUrl = readResultParams(searchParams);
 
       if (fromUrl) {
@@ -48,6 +45,13 @@ const Result = () => {
         setDate(fromUrl.date);
         sessionStorage.setItem("formName", fromUrl.name);
         sessionStorage.setItem("formDate", fromUrl.date);
+
+        if (!searchParams.has(RESULT_PARAM)) {
+          setSearchParams(buildResultSearchParams(fromUrl.name, fromUrl.date), {
+            replace: true,
+          });
+        }
+
         return;
       }
 
@@ -61,13 +65,9 @@ const Result = () => {
     if (storedName && storedDate && validateDate(storedDate).isValid) {
       setName(storedName);
       setDate(storedDate);
-      setSearchParams(
-        {
-          [RESULT_PARAM_NAME]: storedName,
-          [RESULT_PARAM_DATE]: storedDate,
-        },
-        { replace: true },
-      );
+      setSearchParams(buildResultSearchParams(storedName, storedDate), {
+        replace: true,
+      });
       return;
     }
 
