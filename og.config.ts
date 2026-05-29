@@ -25,5 +25,12 @@ export function createResultOgOptions(siteOrigin: string): Options {
       locale: "ru_RU",
       siteName: "Flowwow",
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      image: imageUrl,
+      imageAlt: "Пионовый предсказатель Flowwow",
+    },
   };
 }
