@@ -16,12 +16,15 @@ import {
 } from "../../utils/resultParams";
 import { validateDate } from "../../utils/validators";
 import { RESULT_SHARE_TITLE } from "../../constants/share";
+import { PROMO_CODE } from "../../constants/promo";
+import { usePromoCopy } from "../../hooks/usePromoCopy";
+import { reachGoal, YM_GOALS } from "../../utils/metrika";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
 const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь мне пионы? Это не я придумала — это астрология, наука и вообще судьба. Так что, если ты вдруг в ближайшие дни почувствуешь необъяснимую тягу к красивым цветам, это космос работает.
 
-Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
+Не спорь со звездами. Сделай красиво. Вот промокод: ${PROMO_CODE}`;
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
 const SHARE_TITLE = RESULT_SHARE_TITLE;
@@ -35,6 +38,7 @@ const Result = () => {
   const [date, setDate] = useState("");
   const [pendingAction, setPendingAction] = useState<ExportAction | null>(null);
   const isExporting = pendingAction !== null;
+  const { copyPromocode, toast } = usePromoCopy();
 
   useEffect(() => {
     if (hasResultParams(searchParams)) {
@@ -92,11 +96,13 @@ const Result = () => {
     try {
       const blob = await capturePageAsBlob();
       await downloadImage(blob, IMAGE_FILENAME);
+      reachGoal(YM_GOALS.download);
     } catch {
       const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
       await downloadFile(blob, "pionovyj-predskazatel.txt");
+      reachGoal(YM_GOALS.download);
     } finally {
       setPendingAction(null);
     }
@@ -112,6 +118,7 @@ const Result = () => {
     try {
       if (navigator.share) {
         await navigator.share({ url: shareUrl });
+        reachGoal(YM_GOALS.share);
         return;
       }
     } catch (error) {
@@ -126,6 +133,7 @@ const Result = () => {
 
   return (
     <Container>
+      {toast}
       <div className="result">
         <div className="result-body">
           <p className="name">{name}</p>
@@ -139,10 +147,15 @@ const Result = () => {
             </p>
             <p>Не&nbsp;спорь со&nbsp;звездами. Сделай красиво. Вот промокод.</p>
           </div>
-          <div className="gift">
-            <img src={gift3} alt="gift" />
-            <p>LUNAR</p>
-          </div>
+          <button
+            type="button"
+            className="gift gift--copy"
+            onClick={copyPromocode}
+            aria-label="Скопировать промокод"
+          >
+            <img src={gift3} alt="" />
+            <p>{PROMO_CODE}</p>
+          </button>
           <div className="result-actions">
             <Button
               color="primary"

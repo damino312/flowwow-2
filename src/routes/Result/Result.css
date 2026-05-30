@@ -129,6 +129,20 @@
     border-radius: 100px;
     padding: 1.4rem 4.4rem 1.4rem 1rem;
     margin-bottom: 0;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(55, 11, 39, 0.12);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
 
     img {
       flex-shrink: 0;
