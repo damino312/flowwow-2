@@ -9,13 +9,6 @@ declare global {
   }
 }
 
-export const YM_GOALS = {
-  predict: "predict",
-  share: "share",
-  download: "download",
-  copyPromocode: "copy_promocode",
-} as const;
-
 const counterId = Number(import.meta.env.VITE_YM_COUNTER_ID);
 
 let isInitialized = false;
@@ -52,11 +45,4 @@ export function initMetrika(): void {
     trackLinks: true,
     accurateTrackBounce: true,
   });
-}
-
-export function reachGoal(
-  goal: (typeof YM_GOALS)[keyof typeof YM_GOALS],
-): void {
-  if (!counterId || !window.ym) return;
-  window.ym(counterId, "reachGoal", goal);
 }

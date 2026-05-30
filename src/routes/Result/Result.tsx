@@ -18,7 +18,6 @@ import { validateDate } from "../../utils/validators";
 import { RESULT_SHARE_TITLE } from "../../constants/share";
 import { PROMO_CODE } from "../../constants/promo";
 import { usePromoCopy } from "../../hooks/usePromoCopy";
-import { reachGoal, YM_GOALS } from "../../utils/metrika";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
@@ -96,13 +95,11 @@ const Result = () => {
     try {
       const blob = await capturePageAsBlob();
       await downloadImage(blob, IMAGE_FILENAME);
-      reachGoal(YM_GOALS.download);
     } catch {
       const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
       await downloadFile(blob, "pionovyj-predskazatel.txt");
-      reachGoal(YM_GOALS.download);
     } finally {
       setPendingAction(null);
     }
@@ -118,7 +115,6 @@ const Result = () => {
     try {
       if (navigator.share) {
         await navigator.share({ url: shareUrl });
-        reachGoal(YM_GOALS.share);
         return;
       }
     } catch (error) {

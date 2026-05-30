@@ -1,6 +1,5 @@
 import { PROMO_CODE } from "../constants/promo";
 import { copyText } from "../utils/copyText";
-import { reachGoal, YM_GOALS } from "../utils/metrika";
 import { useToast } from "./useToast";
 
 export function usePromoCopy() {
@@ -10,7 +9,6 @@ export function usePromoCopy() {
     const copied = await copyText(PROMO_CODE);
 
     if (copied) {
-      reachGoal(YM_GOALS.copyPromocode);
       showToast("Промокод скопирован");
       return;
     }

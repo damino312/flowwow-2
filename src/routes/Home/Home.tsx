@@ -2,7 +2,6 @@ import { type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
-import { reachGoal, YM_GOALS } from "../../utils/metrika";
 import logo2 from "../../assets/logo-2.svg";
 import peonie1 from "../../assets/peonie_1.png";
 import peonie3 from "../../assets/peonie_3.png";
@@ -13,7 +12,6 @@ const Home: FC = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    reachGoal(YM_GOALS.predict);
     navigate("/prediction");
   };
 
