@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import {
   capturePageAsBlob,
   downloadFile,
   downloadImage,
-  shareImage,
 } from "../../utils/capturePage";
+import {
+  buildResultSearchParams,
+  buildResultShareUrl,
+  hasResultParams,
+  readResultParams,
+  RESULT_PARAM,
+} from "../../utils/resultParams";
+import { validateDate } from "../../utils/validators";
+import { RESULT_SHARE_TITLE } from "../../constants/share";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
@@ -15,12 +24,65 @@ const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь 
 Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
+const SHARE_TITLE = RESULT_SHARE_TITLE;
 
 type ExportAction = "download" | "share";
 
 const Result = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
   const [pendingAction, setPendingAction] = useState<ExportAction | null>(null);
   const isExporting = pendingAction !== null;
+
+  useEffect(() => {
+    if (hasResultParams(searchParams)) {
+      const fromUrl = readResultParams(searchParams);
+
+      if (fromUrl) {
+        setName(fromUrl.name);
+        setDate(fromUrl.date);
+        sessionStorage.setItem("formName", fromUrl.name);
+        sessionStorage.setItem("formDate", fromUrl.date);
+
+        if (!searchParams.has(RESULT_PARAM)) {
+          setSearchParams(buildResultSearchParams(fromUrl.name, fromUrl.date), {
+            replace: true,
+          });
+        }
+
+        return;
+      }
+
+      navigate("/", { replace: true });
+      return;
+    }
+
+    const storedName = sessionStorage.getItem("formName") || "";
+    const storedDate = sessionStorage.getItem("formDate") || "";
+
+    if (storedName && storedDate && validateDate(storedDate).isValid) {
+      setName(storedName);
+      setDate(storedDate);
+      setSearchParams(buildResultSearchParams(storedName, storedDate), {
+        replace: true,
+      });
+      return;
+    }
+
+    navigate("/", { replace: true });
+  }, [navigate, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (!name || !date) return;
+
+    document.title = SHARE_TITLE;
+
+    return () => {
+      document.title = "Пионовый предсказатель";
+    };
+  }, [name, date]);
 
   const handleDownload = async () => {
     if (isExporting) return;
@@ -31,7 +93,6 @@ const Result = () => {
       const blob = await capturePageAsBlob();
       await downloadImage(blob, IMAGE_FILENAME);
     } catch {
-      const name = sessionStorage.getItem("formName") || "";
       const blob = new Blob([`${name}\n\n${SHARE_TEXT}`], {
         type: "text/plain;charset=utf-8",
       });
@@ -42,13 +103,17 @@ const Result = () => {
   };
 
   const handleShare = async () => {
-    if (isExporting) return;
+    if (isExporting || !name || !date) return;
 
     setPendingAction("share");
 
+    const shareUrl = buildResultShareUrl(name, date);
+
     try {
-      const blob = await capturePageAsBlob();
-      await shareImage(blob, IMAGE_FILENAME);
+      if (navigator.share) {
+        await navigator.share({ url: shareUrl });
+        return;
+      }
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       alert("Не удалось поделиться результатом.");
@@ -57,11 +122,13 @@ const Result = () => {
     }
   };
 
+  if (!name || !date) return null;
+
   return (
     <Container>
       <div className="result">
         <div className="result-body">
-          <p className="name">{sessionStorage.getItem("formName")}</p>
+          <p className="name">{name}</p>
           <div className="text">
             <p>
               А&nbsp;ты&nbsp;знаешь, что вот-вот подаришь мне пионы? Это
@@ -93,7 +160,7 @@ const Result = () => {
               disabled={isExporting}
               loading={pendingAction === "share"}
             >
-              Пошерить
+              Поделиться
             </Button>
           </div>
         </div>
