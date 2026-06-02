@@ -163,7 +163,7 @@ const Result = () => {
               Скачать результат
             </Button>
             <Button
-              color="secondary"
+              color="primary"
               type="button"
               onClick={handleShare}
               disabled={isExporting}

@@ -27,8 +27,17 @@
   font: inherit;
   line-height: 0;
 
+  picture {
+    display: inline-flex;
+    max-width: 184px;
+    max-height: 45px;
+  }
+
   img {
     display: block;
+    max-width: 184px;
+    max-height: 45px;
+    width: auto;
     height: auto;
   }
 }
