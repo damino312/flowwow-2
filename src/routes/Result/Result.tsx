@@ -16,12 +16,14 @@ import {
 } from "../../utils/resultParams";
 import { validateDate } from "../../utils/validators";
 import { RESULT_SHARE_TITLE } from "../../constants/share";
+import { PROMO_CODE } from "../../constants/promo";
+import { usePromoCopy } from "../../hooks/usePromoCopy";
 import gift3 from "../../assets/gift-3.svg";
 import "./Result.css";
 
 const SHARE_TEXT = `А ты знаешь, что вот-вот подаришь мне пионы? Это не я придумала — это астрология, наука и вообще судьба. Так что, если ты вдруг в ближайшие дни почувствуешь необъяснимую тягу к красивым цветам, это космос работает.
 
-Не спорь со звездами. Сделай красиво. Вот промокод: LUNAR`;
+Не спорь со звездами. Сделай красиво. Вот промокод: ${PROMO_CODE}`;
 
 const IMAGE_FILENAME = "pionovyj-predskazatel.jpeg";
 const SHARE_TITLE = RESULT_SHARE_TITLE;
@@ -35,6 +37,7 @@ const Result = () => {
   const [date, setDate] = useState("");
   const [pendingAction, setPendingAction] = useState<ExportAction | null>(null);
   const isExporting = pendingAction !== null;
+  const { copyPromocode, toast } = usePromoCopy();
 
   useEffect(() => {
     if (hasResultParams(searchParams)) {
@@ -126,6 +129,7 @@ const Result = () => {
 
   return (
     <Container>
+      {toast}
       <div className="result">
         <div className="result-body">
           <p className="name">{name}</p>
@@ -139,10 +143,15 @@ const Result = () => {
             </p>
             <p>Не&nbsp;спорь со&nbsp;звездами. Сделай красиво. Вот промокод.</p>
           </div>
-          <div className="gift">
-            <img src={gift3} alt="gift" />
-            <p>LUNAR</p>
-          </div>
+          <button
+            type="button"
+            className="gift gift--copy"
+            onClick={copyPromocode}
+            aria-label="Скопировать промокод"
+          >
+            <img src={gift3} alt="" />
+            <p>{PROMO_CODE}</p>
+          </button>
           <div className="result-actions">
             <Button
               color="primary"
@@ -154,7 +163,7 @@ const Result = () => {
               Скачать результат
             </Button>
             <Button
-              color="secondary"
+              color="primary"
               type="button"
               onClick={handleShare}
               disabled={isExporting}
@@ -166,7 +175,9 @@ const Result = () => {
         </div>
 
         <p className="result-disclaimer">
-          *на одно применение при покупке от ххх рублей до хх.хх.хххх
+          * Промокод на&nbsp;скидку&nbsp;10% действителен на&nbsp;одну покупку
+          от&nbsp;3&nbsp;000&nbsp;₽ в&nbsp;категории &laquo;Цветы&raquo;
+          до&nbsp;10.07.2026
         </p>
       </div>
     </Container>

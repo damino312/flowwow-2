@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Container } from "../../components/Container";
 import Button from "../../components/Button";
 import { monthPrediction } from "../../const/copyrights";
+import { PROMO_CODE } from "../../constants/promo";
+import { usePromoCopy } from "../../hooks/usePromoCopy";
 import { buildResultPath } from "../../utils/resultParams";
 import gift2 from "../../assets/gift-2.svg";
 import "./Promo.css";
@@ -10,6 +12,7 @@ import "./Promo.css";
 const Promo: FC = () => {
   const navigate = useNavigate();
   const [date, setDate] = useState<string>("");
+  const { copyPromocode, toast } = usePromoCopy();
 
   useEffect(() => {
     if (!sessionStorage.getItem("formDate")) {
@@ -26,10 +29,16 @@ const Promo: FC = () => {
 
   return (
     <div className="promo">
-      <div className="code">
+      {toast}
+      <button
+        type="button"
+        className="code code--copy"
+        onClick={copyPromocode}
+        aria-label="Скопировать промокод"
+      >
         <p className="promotext">Твой промокод:</p>
-        <p className="promocode">LUNAR</p>
-      </div>
+        <p className="promocode">{PROMO_CODE}</p>
+      </button>
       <Container>
         <div>
           <div className="gift">

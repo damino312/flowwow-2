@@ -1,7 +1,8 @@
 import { type FC } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import logo from "../../assets/logo.svg";
+import logoLight from "../../assets/Color=Purpur.webp";
+import logoDark from "../../assets/Logo.webp";
 import "./Layout.css";
 
 const MAIN_CLASS_BY_PATH: Record<string, string> = {
@@ -23,9 +24,12 @@ const Layout: FC = () => {
           onClick={() => navigate("/")}
           aria-label="На главную"
         >
-          <img src={logo} alt="FLOWWOW" />
+          <picture>
+            <source srcSet={logoDark} media="(prefers-color-scheme: dark)" />
+            <img src={logoLight} alt="Флаувау" />
+          </picture>
         </button>
-        <h1 className="visually-hidden">FLOWWOW: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
+        <h1 className="visually-hidden">Флаувау: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
       </header>
 
       <motion.main

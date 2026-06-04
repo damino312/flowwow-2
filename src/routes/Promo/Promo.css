@@ -31,6 +31,21 @@
       linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
       linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6));
     backdrop-filter: blur(59.400001525878906px);
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    text-align: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: scale(1.01);
+      box-shadow: 0 4px 20px rgba(55, 11, 39, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.99);
+    }
 
     @media (max-width: 950px) {
       margin: auto;
