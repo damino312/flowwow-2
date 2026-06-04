@@ -26,10 +26,10 @@ const Layout: FC = () => {
         >
           <picture>
             <source srcSet={logoDark} media="(prefers-color-scheme: dark)" />
-            <img src={logoLight} alt="FLOWWOW" />
+            <img src={logoLight} alt="Флаувау" />
           </picture>
         </button>
-        <h1 className="visually-hidden">FLOWWOW: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
+        <h1 className="visually-hidden">Флаувау: ПИОНОВЫЙ ПРЕДСКАЗАТЕЛЬ</h1>
       </header>
 
       <motion.main

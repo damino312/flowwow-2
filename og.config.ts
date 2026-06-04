@@ -23,14 +23,14 @@ export function createResultOgOptions(siteOrigin: string): Options {
       type: "website",
       image: imageUrl,
       locale: "ru_RU",
-      siteName: "Flowwow",
+      siteName: "Флаувау",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       image: imageUrl,
-      imageAlt: "Пионовый предсказатель Flowwow",
+      imageAlt: "Пионовый предсказатель Флаувау",
     },
   };
 }
